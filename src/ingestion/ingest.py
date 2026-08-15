@@ -15,9 +15,9 @@ from src.utils.logger import initialize_logger
 from src.utils.identifier import parse_identifier
 
 load_dotenv()
-logging = initialize_logger()
+logging = initialize_logger(log_destination='ingest.log', logger_name='ingest')
 
-START_YEAR = 1985
+START_YEAR = 2010
 END_YEAR = 2021
 DATABASE_URL = os.getenv("DATABASE_URL")
 engine = create_engine(DATABASE_URL)
@@ -105,11 +105,12 @@ def import_historical_baseball():
             ).unnest("parsed")
 
             df = gl.to_pandas()
-            df.to_sql("raw_boxscores", engine, index=False, if_exists=exists_method, method="multi")
+            df.to_sql("raw_linescores", engine, index=False, if_exists=exists_method, method="multi")
     except Exception as e:
       logging.error(f"Error in historical baseball data transfer for year={import_year}: {e}")
     finally:
       import_year += 1
+      print(f"Completed ingestion for {import_year}")
 
 if __name__ == "__main__":
   import_historical_baseball()
