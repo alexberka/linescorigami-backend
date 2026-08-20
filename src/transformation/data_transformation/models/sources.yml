@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: raw_linescores
+    database: linescorigami
+    schema: public
+    tables:
+      - name: raw_linescores
